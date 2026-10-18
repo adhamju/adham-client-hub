@@ -103,10 +103,13 @@ export async function createFirstAdmin(formData: FormData): Promise<Result> {
     email_confirm: true,
     user_metadata: { full_name: fullName },
   });
-  if (error) return { error: friendly(error.message) };
+  if (error) {
+    // Setup-time only (no admin exists yet), so showing the real reason is safe and saves a lot of guessing.
+    return { error: "Could not create the account: " + (error.message || "unknown error") };
+  }
 
   const { error: signInError } = await supabase.auth.signInWithPassword({ email, password });
-  if (signInError) return { error: "Account created — please sign in." };
+  if (signInError) return { error: "Account created, please sign in. (" + signInError.message + ")" };
 
   redirect("/admin");
 }
