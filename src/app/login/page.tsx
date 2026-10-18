@@ -13,16 +13,15 @@ export default async function LoginPage() {
           {adminExists ? "Sign in to your account." : "No admin account exists yet — create the first one below."}
         </p>
 
-        {adminExists ? (
-          <SignInForm />
-        ) : (
-          <>
-            <CreateAdminForm />
-            <p className="mt-6 text-[12px] text-ink-faint">
-              This form only appears once. After the first admin account is created, everyone — you and your clients —
-              signs in with the normal sign-in form.
+        <SignInForm />
+
+        {!adminExists && (
+          <div className="mt-10 border-t border-base-border pt-6">
+            <p className="mb-3 text-[13px] text-ink-dim">
+              First time? Create the first admin account here. This form disappears once an admin exists.
             </p>
-          </>
+            <CreateAdminForm />
+          </div>
         )}
       </div>
     </main>
