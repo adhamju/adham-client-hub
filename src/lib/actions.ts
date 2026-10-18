@@ -1,11 +1,10 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
 import { createClient as createServerClient, createAdminClient } from "@/lib/supabase/server";
 import type { PaymentMethod, ProjectStatus, VideoStatus } from "@/lib/database.types";
 
-type Result = { error?: string; success?: boolean; id?: string };
+type Result = { error?: string; success?: boolean; id?: string; redirectTo?: string };
 
 // Never show raw database/internal errors to normal users.
 function friendly(message: string | undefined): string {
@@ -74,14 +73,21 @@ export async function signIn(formData: FormData): Promise<Result> {
 
   const supabase = createServerClient();
   const { error } = await supabase.auth.signInWithPassword({ email, password });
-  if (error) return { error: "Wrong email or password, or this account has been disabled." };
+  if (error) {
+    if (/invalid login credentials/i.test(error.message)) {
+      return { error: "Wrong email or password, or this account has been disabled." };
+    }
+    // Anything else (unconfirmed email, connection problem, bad key) is a setup issue, so say what it is.
+    return { error: "Sign-in failed: " + (error.message || "unknown error") };
+  }
 
   const {
     data: { user },
   } = await supabase.auth.getUser();
   const { data: profile } = await supabase.from("profiles").select("role").eq("id", user!.id).single();
 
-  redirect(profile?.role === "admin" ? "/admin" : "/client");
+  // Navigation happens in the browser: redirect() inside a server action crashes on Cloudflare Pages.
+  return { success: true, redirectTo: profile?.role === "admin" ? "/admin" : "/client" };
 }
 
 export async function createFirstAdmin(formData: FormData): Promise<Result> {
@@ -111,13 +117,13 @@ export async function createFirstAdmin(formData: FormData): Promise<Result> {
   const { error: signInError } = await supabase.auth.signInWithPassword({ email, password });
   if (signInError) return { error: "Account created, please sign in. (" + signInError.message + ")" };
 
-  redirect("/admin");
+  return { success: true, redirectTo: "/admin" };
 }
 
-export async function signOut() {
+export async function signOut(): Promise<Result> {
   const supabase = createServerClient();
   await supabase.auth.signOut();
-  redirect("/login");
+  return { success: true, redirectTo: "/login" };
 }
 
 // ---------------------------------------------------------------------
@@ -192,7 +198,7 @@ export async function deleteClientCompany(clientId: string): Promise<Result> {
     return { error: friendly((e as Error).message) };
   }
   revalidatePath("/admin", "layout");
-  redirect("/admin/clients");
+  return { success: true, redirectTo: "/admin/clients" };
 }
 
 export async function createClientAccount(clientId: string, formData: FormData): Promise<Result> {
@@ -431,7 +437,7 @@ export async function deleteVideo(videoId: string): Promise<Result> {
     return { error: friendly((e as Error).message) };
   }
   revalidatePath("/admin", "layout");
-  redirect("/admin/videos");
+  return { success: true, redirectTo: "/admin/videos" };
 }
 
 // ---------------------------------------------------------------------

@@ -11,6 +11,7 @@ const initialState: State = {};
 export function SignInForm() {
   const [state, formAction, pending] = useActionState<State, FormData>(async (_prev, formData) => {
     const result = await signIn(formData);
+    if (result?.redirectTo) window.location.assign(result.redirectTo);
     return { error: result?.error };
   }, initialState);
 
@@ -29,6 +30,7 @@ export function SignInForm() {
 export function CreateAdminForm() {
   const [state, formAction, pending] = useActionState<State, FormData>(async (_prev, formData) => {
     const result = await createFirstAdmin(formData);
+    if (result?.redirectTo) window.location.assign(result.redirectTo);
     return { error: result?.error };
   }, initialState);
 

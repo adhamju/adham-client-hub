@@ -54,14 +54,14 @@ export default async function ClientDetailPage({ params }: { params: Promise<{ i
           <ModalForm
             trigger={<Button size="sm" variant="secondary"><Pencil size={14} /> Edit / archive</Button>}
             title="Edit client"
-            action={(fd) => updateClientCompany(client.id, fd)}
+            action={updateClientCompany.bind(null, client.id)}
           >
             <ClientFormFields client={client} />
           </ModalForm>
           <ConfirmButton
             label="Delete client"
             confirmText={`Permanently delete ${client.company_name} and everything under it (projects, videos, payments, feedback)? This can't be undone. (To just hide them, use Edit → Archived instead.)`}
-            action={() => deleteClientCompany(client.id)}
+            action={deleteClientCompany.bind(null, client.id)}
           />
         </div>
       </div>

@@ -50,7 +50,8 @@
 
 6. اضغط **Save and Deploy** واستنى 2 إلى 4 دقايق.
 7. رابط موقعك رح يكون: **https://adham-client-hub.pages.dev** (إذا الاسم مأخوذ، Cloudflare بيضيف أرقام بآخره، وبتشوف الرابط الحقيقي بنهاية النشر).
-8. إذا طلع خطأ عن `nodejs_compat`: **Settings** ← **Functions** ← **Compatibility flags** ← زيد `nodejs_compat` للـ Production وللـ Preview، وبعدها **Deployments** ← **Retry deployment**.
+8. **مهم (وإلا بيطلع 500):** لازم تفعّل `nodejs_compat`: **Settings** ← **Runtime** (أو **Functions**) ← **Compatibility flags** ← زيد `nodejs_compat` للـ Production وللـ Preview، وبعدها **Deployments** ← **Retry deployment**.
+   - لا تحط ملف `wrangler.toml` بالمشروع: وجوده بيخلي Cloudflare يتجاهل المتغيرات اللي حطيتها من اللوحة.
 9. إذا غيّرت أي متغير بعد النشر لازم تعمل **Retry deployment** حتى ياخد التغيير.
 
 ## الخطوة 4: أول دخول (إنشاء حساب الأدمن)

@@ -47,14 +47,14 @@ export default async function ProjectsPage() {
                 <ModalForm
                   trigger={<Button size="sm" variant="ghost" aria-label="Edit project"><Pencil size={14} /></Button>}
                   title={`Edit ${p.name}`}
-                  action={(fd) => updateProject(p.id, fd)}
+                  action={updateProject.bind(null, p.id)}
                 >
                   <ProjectFormFields clients={activeClients} project={p} lockClientId={p.client_id} />
                 </ModalForm>
                 <ConfirmButton
                   label={<Trash2 size={14} />}
                   confirmText={`Delete project "${p.name}"? Its videos are kept, just no longer grouped under a project.`}
-                  action={() => deleteProject(p.id)}
+                  action={deleteProject.bind(null, p.id)}
                 />
               </div>
             </div>

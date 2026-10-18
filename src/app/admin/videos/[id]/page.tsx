@@ -57,14 +57,14 @@ export default async function VideoDetailPage({ params }: { params: Promise<{ id
             trigger={<Button size="sm" variant="secondary"><Pencil size={14} /> Edit video</Button>}
             title="Edit video"
             size="lg"
-            action={(fd) => updateVideo(video.id, fd)}
+            action={updateVideo.bind(null, video.id)}
           >
             <VideoFormFields clients={activeClients} projects={projectOptions} video={videoWithNotes} />
           </ModalForm>
           <ConfirmButton
             label="Delete"
             confirmText={`Permanently delete "${video.title}"? This also removes its feedback. (Payments are kept as general payments.)`}
-            action={() => deleteVideo(video.id)}
+            action={deleteVideo.bind(null, video.id)}
           />
         </div>
       </div>
@@ -187,7 +187,7 @@ export default async function VideoDetailPage({ params }: { params: Promise<{ id
                 <ConfirmButton
                   label={<Trash2 size={14} />}
                   confirmText="Delete this feedback message?"
-                  action={() => deleteFeedback(f.id)}
+                  action={deleteFeedback.bind(null, f.id)}
                 />
               </div>
             ))}

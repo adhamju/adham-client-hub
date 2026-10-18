@@ -32,14 +32,19 @@ as $$
   );
 $$;
 
+-- (plpgsql on purpose: this function reads the client_users table, which is
+-- created further down. A plain "sql" function is checked at creation time
+-- and would fail because the table doesn't exist yet.)
 create function public.my_client_ids()
 returns setof uuid
-language sql
+language plpgsql
 stable
 security definer
 set search_path = public
 as $$
-  select client_id from public.client_users where user_id = auth.uid();
+begin
+  return query select client_id from public.client_users where user_id = auth.uid();
+end;
 $$;
 
 -- Is there an admin yet? Used by the login screen to decide whether to

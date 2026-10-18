@@ -3,7 +3,7 @@ import Link from "next/link";
 import { LogOut } from "lucide-react";
 import { getCurrentProfile, getMyClientId, getSettings } from "@/lib/queries";
 import { createClient } from "@/lib/supabase/server";
-import { signOut } from "@/lib/actions";
+import { SignOutButton } from "@/components/ui/sign-out-button";
 import { hexToRgbTriplet } from "@/lib/utils";
 
 export default async function ClientLayout({ children }: { children: React.ReactNode }) {
@@ -20,9 +20,7 @@ export default async function ClientLayout({ children }: { children: React.React
         <p className="max-w-sm text-sm text-ink-dim">
           Your account isn't linked to a client company yet. Ask your producer to finish setting up your portal access.
         </p>
-        <form action={signOut}>
-          <button className="text-[13px] text-signal-waiting hover:underline">Sign out</button>
-        </form>
+        <SignOutButton className="text-[13px] text-signal-waiting hover:underline">Sign out</SignOutButton>
       </main>
     );
   }
@@ -43,11 +41,9 @@ export default async function ClientLayout({ children }: { children: React.React
             <p className="text-sm font-medium text-ink">{client?.company_name}</p>
           </div>
         </Link>
-        <form action={signOut}>
-          <button className="flex items-center gap-2 text-[13px] text-ink-dim hover:text-ink">
-            <LogOut size={15} /> Sign out
-          </button>
-        </form>
+        <SignOutButton className="flex items-center gap-2 text-[13px] text-ink-dim hover:text-ink">
+          <LogOut size={15} /> Sign out
+        </SignOutButton>
       </header>
       <main className="mx-auto max-w-4xl px-4 py-6 md:px-8 md:py-8">{children}</main>
     </div>

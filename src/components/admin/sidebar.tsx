@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { LayoutDashboard, Users, FolderKanban, Clapperboard, CreditCard, Settings, LogOut } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { signOut } from "@/lib/actions";
+import { SignOutButton } from "@/components/ui/sign-out-button";
 
 const links = [
   { href: "/admin", label: "Dashboard", icon: LayoutDashboard },
@@ -46,12 +46,12 @@ export function AdminSidebar({ businessName, logoUrl }: { businessName: string; 
           </Link>
         ))}
       </nav>
-      <form action={signOut} className="border-t border-base-border p-3">
-        <button className="flex w-full items-center gap-2.5 rounded-sm px-3 py-2 text-[14px] text-ink-dim hover:bg-base-raised hover:text-ink">
+      <div className="border-t border-base-border p-3">
+        <SignOutButton className="flex w-full items-center gap-2.5 rounded-sm px-3 py-2 text-[14px] text-ink-dim hover:bg-base-raised hover:text-ink">
           <LogOut size={16} />
           Sign out
-        </button>
-      </form>
+        </SignOutButton>
+      </div>
     </aside>
   );
 }

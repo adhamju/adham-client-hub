@@ -6,7 +6,7 @@ import { X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
-type ActionResult = { error?: string; success?: boolean; id?: string } | void;
+type ActionResult = { error?: string; success?: boolean; id?: string; redirectTo?: string } | void;
 
 export function ModalForm({
   trigger,
@@ -39,6 +39,10 @@ export function ModalForm({
       const result = await action(formData);
       if (result && result.error) {
         setError(result.error);
+        return;
+      }
+      if (result && result.redirectTo) {
+        window.location.assign(result.redirectTo);
         return;
       }
       setOpen(false);
@@ -126,6 +130,10 @@ export function ConfirmButton({
         startTransition(async () => {
           const result = await action();
           if (result && result.error) window.alert(result.error);
+          if (result && result.redirectTo) {
+            window.location.assign(result.redirectTo);
+            return;
+          }
           router.refresh();
         });
       }}

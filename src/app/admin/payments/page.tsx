@@ -57,14 +57,14 @@ export default async function PaymentsPage() {
                 <ModalForm
                   trigger={<Button size="sm" variant="ghost" aria-label="Edit payment"><Pencil size={14} /></Button>}
                   title="Edit payment"
-                  action={(fd) => updatePayment(p.id, fd)}
+                  action={updatePayment.bind(null, p.id)}
                 >
                   <PaymentFormFields clients={clients} videos={videoOptions} payment={p as Payment} />
                 </ModalForm>
                 <ConfirmButton
                   label={<Trash2 size={14} />}
                   confirmText="Delete this payment record?"
-                  action={() => deletePayment(p.id)}
+                  action={deletePayment.bind(null, p.id)}
                 />
               </div>
             </div>
